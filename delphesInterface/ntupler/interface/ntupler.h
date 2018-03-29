@@ -8,10 +8,10 @@
 #ifndef ntupler_H_
 #define ntupler_H_
 
+
 #include "interface/basicAnalyzer.h"
 #include "interface/sampleCollection.h"
 #include "classes/DelphesClasses.h"
-
 
 class ntupler: public d_ana::basicAnalyzer{
 public:

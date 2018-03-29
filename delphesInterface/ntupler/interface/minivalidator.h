@@ -8,10 +8,10 @@
 #ifndef minivalidator_H_
 #define minivalidator_H_
 
+
 #include "interface/basicAnalyzer.h"
 #include "interface/sampleCollection.h"
 #include "classes/DelphesClasses.h"
-
 
 class minivalidator: public d_ana::basicAnalyzer{
 public:
