@@ -126,11 +126,20 @@ void basicAnalyzer::readConfigFile(const std::string& inputfile){
 	setLumi(fr.getValue<double>("Lumi"));
 	setTestMode(fr.getValue<bool>("Testmode",false));
 
+        setPlotMode(fr.getValue<bool>("Plotmode",false));
+        if(getPlotMode())
+           setPlotDir(fr.getValue<TString>("Plotdir",""));
+
 	setMaxChilds(fr.getValue<int>("Maxchilds",6));
 
 	runonoutputonly_ = fr.getValue<bool>("RunOnOutputOnly", false);
 
 	setDataSetDirectory(fr.getValue<TString>("Samplesdir"));
+
+	SetSkimOpt(fr.getValue<bool>("doSkim", false));
+	SetnLepmin(fr.getValue<int>("nLepmin",0));
+	SetnPhmin(fr.getValue<int>("nPhmin",0));
+	SetnJetmin(fr.getValue<int>("nJetmin",0));
 
 	fr.setRequireValues(true);
 	fr.setStartMarker("[inputfiles-begin]");
@@ -387,6 +396,20 @@ void basicAnalyzer::setOutDir(const TString& dir){
 		outdir_=dir;
 	else
 		outdir_=dir+"/";
+}
+
+	
+void basicAnalyzer::setPlotMode(const bool& DoPlots){
+	plotmode_ = DoPlots;
+}
+
+
+void basicAnalyzer::setPlotDir(const TString& dir){
+	if(dir.Length()<1) return;
+	if(dir.EndsWith("/"))
+		plotdir_=dir;
+	else
+		plotdir_=dir+"/";
 }
 
 

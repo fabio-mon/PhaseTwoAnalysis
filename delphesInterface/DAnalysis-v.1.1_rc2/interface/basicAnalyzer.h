@@ -48,6 +48,22 @@ public:
 	void setOutDir(const TString& dir);
 	TString getOutDir()const{return outdir_;}
 
+	void setPlotMode(const bool& DoPlots);
+	bool getPlotMode()const{return plotmode_;}
+
+	void setPlotDir(const TString& dir);
+	TString getPlotDir()const{return plotdir_;}
+
+	void SetSkimOpt(const bool& doSkim){doSkim_=doSkim;}
+	void SetnLepmin(const int& nLepmin){nLepmin_=nLepmin;}
+	void SetnPhmin(const int& nPhmin){nPhmin_=nPhmin;}
+	void SetnJetmin(const int& nJetmin){nJetmin_=nJetmin;}
+
+	bool getSkimOpt() const {return doSkim_;}
+	int getnLepmin() const {return nLepmin_;}
+	int getnPhmin() const {return nPhmin_;}
+	int getnJetmin() const {return nJetmin_;}
+
 	TString getOutPath()const{return outdir_+getOutFileName();}
 	TString getTreePath()const{
 		return TString(textFormatter::stripFileExtension(getOutFileName().Data()))+"_ntuples.root";
@@ -173,6 +189,7 @@ private:
 		void setNorm(double norm) {this->norm_ = norm;}
 		const bool& isSignal() const {return signal_;}
 		void setSignal(bool in) {signal_=in;}
+
 	private:
 		sampleDescriptor();
 		TString infile_;
@@ -225,6 +242,12 @@ private:
 	std::vector<TString> fwithfix_,ftorepl_;
 	int freplaced_;
 	bool testmode_;
+
+	bool plotmode_;
+	TString plotdir_;
+
+	bool doSkim_;
+	int nLepmin_, nPhmin_, nJetmin_;
 
 	bool isMC_;
 
