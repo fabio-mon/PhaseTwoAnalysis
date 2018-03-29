@@ -136,10 +136,10 @@ void basicAnalyzer::readConfigFile(const std::string& inputfile){
 
 	setDataSetDirectory(fr.getValue<TString>("Samplesdir"));
 
-	SetSkimOpt(fr.getValue<bool>("doSkim", false));
-	SetnLepmin(fr.getValue<int>("nLepmin",0));
-	SetnPhmin(fr.getValue<int>("nPhmin",0));
-	SetnJetmin(fr.getValue<int>("nJetmin",0));
+	setSkimOpt(fr.getValue<bool>("doSkim", false));
+	setnLepmin(fr.getValue<int>("nLepmin",0));
+	setnPhmin(fr.getValue<int>("nPhmin",0));
+	setnJetmin(fr.getValue<int>("nJetmin",0));
 
 	fr.setRequireValues(true);
 	fr.setStartMarker("[inputfiles-begin]");
@@ -412,6 +412,25 @@ void basicAnalyzer::setPlotDir(const TString& dir){
 		plotdir_=dir+"/";
 }
 
+void basicAnalyzer::setSkimOpt(const bool& doSkim)  
+{
+   doSkim_=doSkim;
+}
+
+void basicAnalyzer::setnLepmin(const int& nLepmin)
+{
+   nLepmin_=nLepmin;
+}
+
+void basicAnalyzer::setnPhmin(const int& nPhmin)
+{
+   nPhmin_=nPhmin;
+}
+
+void basicAnalyzer::setnJetmin(const int& nJetmin)
+{
+   nJetmin_=nJetmin;
+}
 
 TH1* basicAnalyzer::addPlot(TH1* histo, const TString xaxis, const TString yaxis, const TString zaxis) {
 	if(debug)

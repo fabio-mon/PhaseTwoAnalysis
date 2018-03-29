@@ -54,15 +54,17 @@ public:
 	void setPlotDir(const TString& dir);
 	TString getPlotDir()const{return plotdir_;}
 
-	void SetSkimOpt(const bool& doSkim){doSkim_=doSkim;}
-	void SetnLepmin(const int& nLepmin){nLepmin_=nLepmin;}
-	void SetnPhmin(const int& nPhmin){nPhmin_=nPhmin;}
-	void SetnJetmin(const int& nJetmin){nJetmin_=nJetmin;}
+	void setSkimOpt(const bool& doSkim);
+	bool getSkimOpt()const{return doSkim_;}
 
-	bool getSkimOpt() const {return doSkim_;}
-	int getnLepmin() const {return nLepmin_;}
-	int getnPhmin() const {return nPhmin_;}
-	int getnJetmin() const {return nJetmin_;}
+	void setnLepmin(const int& nLepmin);
+	int getnLepmin()const{return nLepmin_;}
+
+	void setnPhmin(const int& nPhmin); 
+	int getnPhmin()const{return nPhmin_;}
+
+	void setnJetmin(const int& nJetmin);  
+	int getnJetmin()const{return nJetmin_;}
 
 	TString getOutPath()const{return outdir_+getOutFileName();}
 	TString getTreePath()const{

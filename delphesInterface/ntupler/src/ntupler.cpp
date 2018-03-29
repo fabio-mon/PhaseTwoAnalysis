@@ -10,7 +10,7 @@
 //dirty hack
 #include "../../../NTupler/src/MiniEvent.cc"
 #include "TDirectory.h"
-
+//#include "/interface/basicAnalyzer.h"
 #include "TH1F.h"
 
 void ntupler::analyze(size_t childid /* this info can be used for printouts */){
@@ -87,6 +87,11 @@ void ntupler::analyze(size_t childid /* this info can be used for printouts */){
     //
 	//metsf.loadTH2D        (cmsswbase+"bla.root","histo");
 
+	//get skim option
+	bool doSkim=getSkimOpt();
+	int nLepmin=getnLepmin();
+	int nPhmin=getnPhmin();
+	int nJetmin=getnJetmin();
 	for(size_t eventno=0;eventno<nevents;eventno++){
 		/*
 		 * The following two lines report the status and set the event link
@@ -260,24 +265,25 @@ void ntupler::analyze(size_t childid /* this info can be used for printouts */){
 			ev_.nmet++;
 		}
 
-
-
-		t_event_->Fill();
-		t_genParts_->Fill();
-		t_genPhotons_->Fill();
-		t_vertices_->Fill();
-		t_genJets_->Fill();
-		t_looseElecs_->Fill();
-		t_mediumElecs_->Fill();
-		t_tightElecs_->Fill();
-		t_looseMuons_->Fill();
-		t_tightMuons_->Fill();
-            t_allTaus_->Fill();
-		t_puppiJets_->Fill();
-		t_puppiMET_->Fill();
-		t_loosePhotons_->Fill();
-		t_tightPhotons_->Fill();
-
+		
+		if( (doSkim && (ev_.ntm+ev_.nte)>=nLepmin && ev_.ntp>=nPhmin && ev_.nj>nJetmin) || (!doSkim) )
+		{	 
+			t_event_->Fill();
+			t_genParts_->Fill();
+			t_genPhotons_->Fill();
+			t_vertices_->Fill();
+			t_genJets_->Fill();
+			t_looseElecs_->Fill();
+			t_mediumElecs_->Fill();
+			t_tightElecs_->Fill();
+			t_looseMuons_->Fill();
+			t_tightMuons_->Fill();
+			t_allTaus_->Fill();
+			t_puppiJets_->Fill();
+			t_puppiMET_->Fill();
+			t_loosePhotons_->Fill();
+			t_tightPhotons_->Fill();
+		}
 	}
 
 	counterdir->cd();
