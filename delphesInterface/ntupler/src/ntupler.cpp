@@ -266,7 +266,7 @@ void ntupler::analyze(size_t childid /* this info can be used for printouts */){
 		}
 
 		
-		if( (doSkim && (ev_.ntm+ev_.nte)>=nLepmin && ev_.ntp>=nPhmin && ev_.nj>nJetmin) || (!doSkim) )
+		if( (doSkim && (ev_.ntm+ev_.nte)>=nLepmin && ev_.ntp>=nPhmin && ev_.nj>=nJetmin) || (!doSkim) )
 		{	 
 			t_event_->Fill();
 			t_genParts_->Fill();
