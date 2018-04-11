@@ -57,7 +57,8 @@ void photonvalidator::analyze(size_t childid /* this info can be used for printo
         TH1F * h_photon_all_SumPtNeutral = new TH1F("h_photon_all_SumPtNeutral","Photon SumPtNeutral",100,0,20);
         TH1F * h_photon_all_SumPtChargedPU = new TH1F("h_photon_all_SumPtChargedPU","Photon SumPtChargedPU",100,0,20);
         TH1F * h_photon_all_SumPt = new TH1F("h_photon_all_SumPt","Photon SumPt",100,0,20);
-
+        TH1F * h_genph_Pt = new TH1F("h_genph_Pt","Gen Photon Pt",400,0,500);
+        TH1F * h_genph_Eta = new TH1F("h_genph_Eta","Gen Photon Eta",400,0,3.5);
 /*        TH1F * h_muontight_iso_pt = new TH1F("h_muontight_iso_pt","Muon PT",200,0,200);
         TH1F * h_muontight_iso_eta = new TH1F("h_muontight_iso_eta","Muon eta",200,-5,5);
         TH1F * h_muontight_iso_phi = new TH1F("h_muontight_iso_phi","Muon phi",200,-3.5,3.5);
@@ -184,6 +185,14 @@ void photonvalidator::analyze(size_t childid /* this info can be used for printo
 
                   }*/
                 }
+                for(size_t i=0;i<genpart.size();i++)
+		{
+		  if(genpart.at(i)->PID==22)
+		  {
+		    h_genph_Pt->Fill(genpart.at(i)->PT);
+		    h_genph_Eta->Fill(genpart.at(i)->Eta);
+		  }
+		}
         }   
 
 TCanvas c1;
@@ -225,6 +234,14 @@ if(getPlotMode())
 	h_photon_all_SumPt               ->Draw();
 	c1.Print(getPlotDir()+h_photon_all_SumPt ->GetName()+".png","png");
 	c1.Print(getPlotDir()+h_photon_all_SumPt ->GetName()+".pdf","pdf");
+        h_genph_Pt                   ->Draw();
+        c1.Print(getPlotDir()+h_genph_Pt ->GetName()+".png","png");
+        c1.Print(getPlotDir()+h_genph_Pt ->GetName()+".pdf","pdf");
+        h_genph_Eta                   ->Draw();
+        c1.Print(getPlotDir()+h_genph_Eta ->GetName()+".png","png");
+        c1.Print(getPlotDir()+h_genph_Eta ->GetName()+".pdf","pdf");
+
+
 }
 
 
@@ -245,7 +262,8 @@ h_photon_all_SumPtCharged        ->Write();
 h_photon_all_SumPtNeutral        ->Write();
 h_photon_all_SumPtChargedPU      ->Write();
 h_photon_all_SumPt               ->Write();
-
+h_genph_Pt                   ->Write();
+h_genph_Eta                  ->Write();
 
 /*
 h_photon_all_IsolationVarRhoCorr_pt->Write();

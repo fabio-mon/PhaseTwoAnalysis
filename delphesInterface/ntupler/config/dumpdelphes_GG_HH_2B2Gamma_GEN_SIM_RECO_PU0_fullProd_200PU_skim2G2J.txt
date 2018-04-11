@@ -1,8 +1,8 @@
 
 [config-begin]
 
-    Outputdir  = /eos/user/f/fmonti/HHGGBB/output/DelphesDump
-    Outputfile = Delphes_GG_HH_2B2Gamma_GEN_SIM_RECO_PU0_fullProd_200PU_skim2G2J.root
+    Outputdir  = /eos/user/f/fmonti/HHGGBB/output/DelphesDump2
+    Outputfile = Delphes_GG_HH_2B2Gamma_GEN_SIM_RECO_PU0_fullProd_200PU_skim2G2J_1.root
     
 $ The luminosity is to be given to match the cross section values listed in the section "inputfiles"
 $ In this example, the cross sections are given in fb.
@@ -29,11 +29,13 @@ $ The default is nLepmin=0, nPhmin=0, nJetmin=0
 $ Maximum number of child processes that are spawned simultaneously, each running on a
 $ different input file.
     
-    Maxchilds  = 6
+    Maxchilds  = 1
 
 $ This Samplesdir can be a local directory or refer to off-site locations via xrootd 
     
     Samplesdir = /eos/cms/store/user/lcadamur/DelphesNtuples/delphes342pre13/
+$    Samplesdir = /eos/cms/store/user/lcadamur/DelphesNtuples/
+
 
 $ The analyser will have a postProcess() function. This function should be used to
 $ extract parameters from the filled histograms, do additional calculations, etc.
@@ -78,6 +80,7 @@ $ e.g. : <insample>, <legendname=outfilename>,  <color: does not matter>, <xsec:
 
 $ This will process all root files in this directory:
 GG_HH_2B2Gamma_GEN_SIM_RECO_PU0_fullProd_200PU/, GG_HH_2B2Gamma_200PU, 1, 1, auto,2
+$GG_HH_2B2Gamma_GEN_SIM_RECO_fullProd_200PU/, GG_HH_2B2Gamma_200PU, 1, 1, auto,2
 
 
 [inputfiles-end]
