@@ -99,6 +99,18 @@ void ntupler::analyze(size_t childid /* this info can be used for printouts */)
     
     h_event_weight->Fill(0.,(double)event.at(0)->Weight);
 
+    std::vector<GenParticle*>selectedgenpart;
+    std::vector<GenParticle*>selectedgenphoton;
+    for(size_t i=0;i<genpart.size();i++)
+    {
+      //std::cout<<"i="<<i<<"\tPID="<<genpart.at(i)->PID<<"\tStatus="<<genpart.at(i)->Status<<"\t1stmother="<<genpart.at(i)->M1<<"\tlastmother="<<genpart.at(i)->M2<<"\t1stdaug="<<genpart.at(i)->D1<<"\tlastdaug="<<genpart.at(i)->D2<<"\tPT="<<genpart.at(i)->PT<<std::endl;
+      int pid= fabs(genpart.at(i)->PID);
+      if(pid==22)
+	selectedgenphoton.push_back(genpart.at(i));	
+      if( (pid>18  && pid < 23) ||  pid > 25 ) continue;
+      selectedgenpart.push_back(genpart.at(i));
+    }
+
     std::vector<Photon*>selectedphotons;
     for(size_t i=0;i<photon.size();i++)
     {
@@ -137,29 +149,39 @@ void ntupler::analyze(size_t childid /* this info can be used for printouts */)
     }
 
     ev_.event = event.at(0)->Number;
+
     ev_.g_nw = 1;
     ev_.g_w[0] = event.at(0)->Weight;
-    ev_.ngl=0;
 
-    for(size_t i=0;i<genpart.size();i++)
+    ev_.ngl=0;
+    for(size_t i=0;i<selectedgenpart.size();i++)
     {
-      std::cout<<"i="<<i<<"\tPID"<<genpart.at(i)->PID<<"\tStatus="<<genpart.at(i)->Status<<"\t1stmother="<<genpart.at(i)->M1<<"\tlastmother="<<genpart.at(i)->M2<<"\t1stdaug="<<genpart.at(i)->D1<<"\tlastdaug="<<genpart.at(i)->D2<<"\tPT="<<genpart.at(i)->PT<<std::endl;
       if(ev_.ngl>=MiniEvent_t::maxpart)break;
-      int pid= fabs(genpart.at(i)->PID);
-      //if( (pid>16  && pid < 21) ||  pid > 25 ) continue;
-      ev_.gl_pid[ev_.ngl]=genpart.at(i)->PID;
-      ev_.gl_ch[ev_.ngl]=genpart.at(i)->Charge;
-      ev_.gl_st[ev_.ngl]=genpart.at(i)->Status;
-      ev_.gl_p[ev_.ngl]=genpart.at(i)->P;
-      ev_.gl_pz[ev_.ngl]=genpart.at(i)->Pz;
-      ev_.gl_pt[ev_.ngl]=genpart.at(i)->PT;
-      ev_.gl_eta[ev_.ngl]=genpart.at(i)->Eta;
-      ev_.gl_phi[ev_.ngl]=genpart.at(i)->Phi;
-      ev_.gl_mass[ev_.ngl]=genpart.at(i)->Mass;
+      ev_.gl_pid[ev_.ngl]=selectedgenpart.at(i)->PID;
+      ev_.gl_ch[ev_.ngl]=selectedgenpart.at(i)->Charge;
+      ev_.gl_st[ev_.ngl]=selectedgenpart.at(i)->Status;
+      ev_.gl_p[ev_.ngl]=selectedgenpart.at(i)->P;
+      ev_.gl_pz[ev_.ngl]=selectedgenpart.at(i)->Pz;
+      ev_.gl_pt[ev_.ngl]=selectedgenpart.at(i)->PT;
+      ev_.gl_eta[ev_.ngl]=selectedgenpart.at(i)->Eta;
+      ev_.gl_phi[ev_.ngl]=selectedgenpart.at(i)->Phi;
+      ev_.gl_mass[ev_.ngl]=selectedgenpart.at(i)->Mass;
       ev_.ngl++;
     }
 
-    std::cout<<std::endl;
+    ev_.ngp=0;
+    for(size_t i=0;i<selectedgenphoton.size();i++)
+    {
+      if(ev_.ngp>=MiniEvent_t::maxpart)break;
+      ev_.gp_st[ev_.ngp]=selectedgenphoton.at(i)->Status;
+      ev_.gp_p[ev_.ngp]=selectedgenphoton.at(i)->P;
+      ev_.gp_pz[ev_.ngp]=selectedgenphoton.at(i)->Pz;
+      ev_.gp_pt[ev_.ngp]=selectedgenphoton.at(i)->PT;
+      ev_.gp_eta[ev_.ngp]=selectedgenphoton.at(i)->Eta;
+      ev_.gp_phi[ev_.ngp]=selectedgenphoton.at(i)->Phi;
+      ev_.ngp++;
+    }
+
     ev_.ntp=0;
     for(size_t i=0;i<selectedphotons.size();i++)
     {
