@@ -22,7 +22,8 @@ void ntupler::analyze(size_t childid /* this info can be used for printouts */)
   d_ana::dBranchHandler<Jet>         jet(tree(),"JetPUPPI");
   d_ana::dBranchHandler<Jet>         taujet(tree(),"Jet");
   d_ana::dBranchHandler<Muon>        muontight(tree(),"MuonTight");
-  d_ana::dBranchHandler<Photon>      photon(tree(),"Photon");
+  d_ana::dBranchHandler<Photon>      photonloose(tree(),"PhotonLoose");
+  d_ana::dBranchHandler<Photon>      photontight(tree(),"PhotonTight");
   d_ana::dBranchHandler<MissingET>   met(tree(),"PuppiMissingET");
   d_ana::dBranchHandler<Rho>         rho(tree(),"Rho");
   size_t nevents=tree()->entries();
@@ -115,15 +116,26 @@ void ntupler::analyze(size_t childid /* this info can be used for printouts */)
       selectedgenpart.push_back(genpart.at(i));
     }
 
-    std::vector<Photon*>selectedphotons;
-    for(size_t i=0;i<photon.size();i++)
+    std::vector<Photon*>selectedtightphotons;
+    for(size_t i=0;i<photontight.size();i++)
     {
-      if(photon.at(i)->PT<5) continue;
-      //std::cout<<"photon (eta,phi)=("<<photon.at(i)->Eta<<","<<photon.at(i)->Phi<<")\tPt="<<photon.at(i)->PT<<"\tIsolation/E="<< photon.at(i)->IsolationVarRhoCorr/photon.at(i)->E <<std::endl;
+      if(photontight.at(i)->PT<5) continue;
+      //std::cout<<"photontight (eta,phi)=("<<photontight.at(i)->Eta<<","<<photontight.at(i)->Phi<<")\tPt="<<photontight.at(i)->PT<<"\tIsolation/E="<< photontight.at(i)->IsolationVarRhoCorr/photontight.at(i)->E <<std::endl;
      
-      if(photon.at(i)->IsolationVarRhoCorr / photon.at(i)->E > 0.25) continue;
-      selectedphotons.push_back(photon.at(i));
+      //if(photon.at(i)->IsolationVarRhoCorr / photon.at(i)->E > 0.25) continue;
+      selectedtightphotons.push_back(photontight.at(i));
     }
+
+    std::vector<Photon*>selectedloosephotons;
+    for(size_t i=0;i<photonloose.size();i++)
+    {
+      if(photonloose.at(i)->PT<5) continue;
+      //std::cout<<"photonloose (eta,phi)=("<<photonloose.at(i)->Eta<<","<<photonloose.at(i)->Phi<<")\tPt="<<photonloose.at(i)->PT<<"\tIsolation/E="<< photonloose.at(i)->IsolationVarRhoCorr/photonloose.at(i)->E <<std::endl;
+     
+      //if(photon.at(i)->IsolationVarRhoCorr / photon.at(i)->E > 0.25) continue;
+      selectedloosephotons.push_back(photonloose.at(i));
+    }
+
 
     std::vector<Electron*>selectedelectrons;
     for(size_t i=0;i<elecs.size();i++)
@@ -191,17 +203,31 @@ void ntupler::analyze(size_t childid /* this info can be used for printouts */)
       ev_.ngp++;
     }
 
+    ev_.nlp=0;
+    for(size_t i=0;i<selectedloosephotons.size();i++)
+    {
+      if(ev_.nlp>=MiniEvent_t::maxpart)break;
+      //std::cout<<"photon (eta,phi)=("<<ev_.lp_eta[ev_.nlp]<<","<<ev_.lp_phi[ev_.nlp]<<")"<<std::endl;
+      ev_.lp_eta[ev_.nlp]=selectedloosephotons.at(i)->Eta;
+      ev_.lp_pt [ev_.nlp]=selectedloosephotons.at(i)->PT;
+      ev_.lp_phi[ev_.nlp]=selectedloosephotons.at(i)->Phi;
+      ev_.lp_nrj[ev_.nlp]=selectedloosephotons.at(i)->E;
+      ev_.lp_iso_rhocorr[ev_.nlp]=selectedloosephotons.at(i)->IsolationVarRhoCorr;
+      ev_.lp_sf[ev_.nlp]=loosephotonsf.getSF(fabs(selectedloosephotons.at(i)->Eta),selectedloosephotons.at(i)->PT);
+      ev_.nlp++;
+    }
+
     ev_.ntp=0;
-    for(size_t i=0;i<selectedphotons.size();i++)
+    for(size_t i=0;i<selectedtightphotons.size();i++)
     {
       if(ev_.ntp>=MiniEvent_t::maxpart)break;
       //std::cout<<"photon (eta,phi)=("<<ev_.tp_eta[ev_.ntp]<<","<<ev_.tp_phi[ev_.ntp]<<")"<<std::endl;
-      ev_.tp_eta[ev_.ntp]=selectedphotons.at(i)->Eta;
-      ev_.tp_pt [ev_.ntp]=selectedphotons.at(i)->PT;
-      ev_.tp_phi[ev_.ntp]=selectedphotons.at(i)->Phi;
-      ev_.tp_nrj[ev_.ntp]=selectedphotons.at(i)->E;
-      ev_.tp_iso_rhocorr[ev_.ntp]=selectedphotons.at(i)->IsolationVarRhoCorr;
-      ev_.tp_sf[ev_.ntp]=tightphotonsf.getSF(fabs(selectedphotons.at(i)->Eta),selectedphotons.at(i)->PT);
+      ev_.tp_eta[ev_.ntp]=selectedtightphotons.at(i)->Eta;
+      ev_.tp_pt [ev_.ntp]=selectedtightphotons.at(i)->PT;
+      ev_.tp_phi[ev_.ntp]=selectedtightphotons.at(i)->Phi;
+      ev_.tp_nrj[ev_.ntp]=selectedtightphotons.at(i)->E;
+      ev_.tp_iso_rhocorr[ev_.ntp]=selectedtightphotons.at(i)->IsolationVarRhoCorr;
+      ev_.tp_sf[ev_.ntp]=tightphotonsf.getSF(fabs(selectedtightphotons.at(i)->Eta),selectedtightphotons.at(i)->PT);
       ev_.ntp++;
     }
 

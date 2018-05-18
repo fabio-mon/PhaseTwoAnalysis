@@ -1,7 +1,7 @@
 
 [config-begin]
 
-    Outputdir  = /eos/user/f/fmonti/HHGGBB/data/DelphesDump5
+    Outputdir  = /eos/user/f/fmonti/HHGGBB/data/DelphesDump6
     Outputfile = Delphes_GG_HH_2B2Gamma_GEN_SIM_RECO_PU0_fullProd_200PU_skim2G2J_1.root
     
 $ The luminosity is to be given to match the cross section values listed in the section "inputfiles"
@@ -29,11 +29,11 @@ $ The default is nLepmin=0, nPhmin=0, nJetmin=0
 $ Maximum number of child processes that are spawned simultaneously, each running on a
 $ different input file.
     
-    Maxchilds  = 1
+    Maxchilds  = 6
 
 $ This Samplesdir can be a local directory or refer to off-site locations via xrootd 
     
-    Samplesdir = /eos/cms/store/user/lcadamur/DelphesNtuples/delphes-master-genphotonsPR
+    Samplesdir = /eos/user/f/fmonti/HHGGBB/data/delphesNtuple/
 
 $ The analyser will have a postProcess() function. This function should be used to
 $ extract parameters from the filled histograms, do additional calculations, etc.
@@ -77,7 +77,7 @@ $ Most of these options are not important when converting delphes to Phase2 NTup
 $ e.g. : <insample>, <legendname=outfilename>,  <color: does not matter>, <xsec: does not matter>, <nevents: does not matter>, <legend order: does not matter>,
 
 $ This will process all root files in this directory:
-GG_HH_2B2Gamma_GEN_SIM_RECO_PU0_fullProd_200PU/, GG_HH_2B2Gamma_200PU, 1, 1, auto,2
+newphotonid/, GG_HH_2B2Gamma_200PU, 1, 1, auto,2
 $GG_HH_2B2Gamma_GEN_SIM_RECO_fullProd_200PU/, GG_HH_2B2Gamma_200PU, 1, 1, auto,2
 
 
