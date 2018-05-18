@@ -24,6 +24,7 @@ void ntupler::analyze(size_t childid /* this info can be used for printouts */)
   d_ana::dBranchHandler<Muon>        muontight(tree(),"MuonTight");
   d_ana::dBranchHandler<Photon>      photon(tree(),"Photon");
   d_ana::dBranchHandler<MissingET>   met(tree(),"PuppiMissingET");
+  d_ana::dBranchHandler<Rho>         rho(tree(),"Rho");
   size_t nevents=tree()->entries();
   if(isTestMode())
     nevents/=100;
@@ -97,10 +98,13 @@ void ntupler::analyze(size_t childid /* this info can be used for printouts */)
     
     if(event.size()<1)continue;
     
+    //std::cout<<"rho="<<rho.Rho<<"in range "
+
     h_event_weight->Fill(0.,(double)event.at(0)->Weight);
 
     std::vector<GenParticle*>selectedgenpart;
     std::vector<GenParticle*>selectedgenphoton;
+    //std::cout<<std::endl;
     for(size_t i=0;i<genpart.size();i++)
     {
       //std::cout<<"i="<<i<<"\tPID="<<genpart.at(i)->PID<<"\tStatus="<<genpart.at(i)->Status<<"\t1stmother="<<genpart.at(i)->M1<<"\tlastmother="<<genpart.at(i)->M2<<"\t1stdaug="<<genpart.at(i)->D1<<"\tlastdaug="<<genpart.at(i)->D2<<"\tPT="<<genpart.at(i)->PT<<std::endl;
@@ -115,6 +119,8 @@ void ntupler::analyze(size_t childid /* this info can be used for printouts */)
     for(size_t i=0;i<photon.size();i++)
     {
       if(photon.at(i)->PT<5) continue;
+      //std::cout<<"photon (eta,phi)=("<<photon.at(i)->Eta<<","<<photon.at(i)->Phi<<")\tPt="<<photon.at(i)->PT<<"\tIsolation/E="<< photon.at(i)->IsolationVarRhoCorr/photon.at(i)->E <<std::endl;
+     
       if(photon.at(i)->IsolationVarRhoCorr / photon.at(i)->E > 0.25) continue;
       selectedphotons.push_back(photon.at(i));
     }
@@ -144,9 +150,11 @@ void ntupler::analyze(size_t childid /* this info can be used for printouts */)
     for(size_t i=0;i<taujet.size();i++)
     {
       if(taujet.at(i)->PT<10)continue;
+      //std::cout<<taujet.at(i)->PT<<"\t("<<taujet.at(i)->Eta<<","<<taujet.at(i)->Phi<<")"<<std::endl;
       if(taujet.at(i)->TauTag!=1) continue;
       selectedtaujets.push_back(taujet.at(i));
     }
+    //std::cout<<"--------------------------------------------"<<std::endl;
 
     ev_.event = event.at(0)->Number;
 
@@ -179,6 +187,7 @@ void ntupler::analyze(size_t childid /* this info can be used for printouts */)
       ev_.gp_pt[ev_.ngp]=selectedgenphoton.at(i)->PT;
       ev_.gp_eta[ev_.ngp]=selectedgenphoton.at(i)->Eta;
       ev_.gp_phi[ev_.ngp]=selectedgenphoton.at(i)->Phi;
+      ev_.gp_nrj[ev_.ngp]=selectedgenphoton.at(i)->E;
       ev_.ngp++;
     }
 
@@ -186,10 +195,12 @@ void ntupler::analyze(size_t childid /* this info can be used for printouts */)
     for(size_t i=0;i<selectedphotons.size();i++)
     {
       if(ev_.ntp>=MiniEvent_t::maxpart)break;
+      //std::cout<<"photon (eta,phi)=("<<ev_.tp_eta[ev_.ntp]<<","<<ev_.tp_phi[ev_.ntp]<<")"<<std::endl;
       ev_.tp_eta[ev_.ntp]=selectedphotons.at(i)->Eta;
       ev_.tp_pt [ev_.ntp]=selectedphotons.at(i)->PT;
       ev_.tp_phi[ev_.ntp]=selectedphotons.at(i)->Phi;
       ev_.tp_nrj[ev_.ntp]=selectedphotons.at(i)->E;
+      ev_.tp_iso_rhocorr[ev_.ntp]=selectedphotons.at(i)->IsolationVarRhoCorr;
       ev_.tp_sf[ev_.ntp]=tightphotonsf.getSF(fabs(selectedphotons.at(i)->Eta),selectedphotons.at(i)->PT);
       ev_.ntp++;
     }
@@ -246,6 +257,7 @@ void ntupler::analyze(size_t childid /* this info can be used for printouts */)
     }
 
     ev_.nj=0;
+    //std::cout<<"--------------------------------------------"<<std::endl;
     for(size_t i=0;i<selectedjets.size();i++)
     {
       if(ev_.nj>=MiniEvent_t::maxjets)break;
@@ -258,6 +270,8 @@ void ntupler::analyze(size_t childid /* this info can be used for printouts */)
       
       ev_.j_deepcsv[ev_.nj]=0;
       ev_.j_mvav2[ev_.nj]=0;
+      //std::cout<<"JETID="<<ev_.j_id[ev_.nj]<<"\tGENJET="<<ev_.j_g[ev_.nj]<<"\tPARTONFLAVOR="<<ev_.j_flav[ev_.nj]<<"\thadrFLAVOR="<<ev_.j_hadflav[ev_.nj]<<"\tGenPartonPID="<< ev_.j_pid[ev_.nj]<<std::endl;
+      //std::cout<<"(eta,phi)=("<<ev_.j_eta[ev_.nj]<<","<<ev_.j_phi[ev_.nj]<<")\tPT="<<ev_.j_pt  [ev_.nj]<<std::endl;
       if(selectedjets.at(i)->BTag)
       {
 	ev_.j_deepcsv[ev_.nj]=0b00000111;
@@ -266,7 +280,8 @@ void ntupler::analyze(size_t childid /* this info can be used for printouts */)
       ev_.j_sf[ev_.nj]=jetsf.getSF(fabs(selectedjets.at(i)->Eta),selectedjets.at(i)->PT);
       ev_.nj++;
     }
-
+    //std::cout<<"--------------------------------------------"<<std::endl;    
+    //std::cout<<"--------------------------------------------"<<std::endl;
     ev_.nmet=0;
     for(size_t i=0;i<met.size();i++)
     {

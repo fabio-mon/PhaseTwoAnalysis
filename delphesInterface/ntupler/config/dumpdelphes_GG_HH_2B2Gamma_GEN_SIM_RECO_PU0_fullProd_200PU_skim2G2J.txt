@@ -1,7 +1,7 @@
 
 [config-begin]
 
-    Outputdir  = /eos/user/f/fmonti/HHGGBB/output/DelphesDump2
+    Outputdir  = /eos/user/f/fmonti/HHGGBB/data/DelphesDump5
     Outputfile = Delphes_GG_HH_2B2Gamma_GEN_SIM_RECO_PU0_fullProd_200PU_skim2G2J_1.root
     
 $ The luminosity is to be given to match the cross section values listed in the section "inputfiles"
@@ -33,9 +33,7 @@ $ different input file.
 
 $ This Samplesdir can be a local directory or refer to off-site locations via xrootd 
     
-    Samplesdir = /eos/cms/store/user/lcadamur/DelphesNtuples/delphes342pre13/
-$    Samplesdir = /eos/cms/store/user/lcadamur/DelphesNtuples/
-
+    Samplesdir = /eos/cms/store/user/lcadamur/DelphesNtuples/delphes-master-genphotonsPR
 
 $ The analyser will have a postProcess() function. This function should be used to
 $ extract parameters from the filled histograms, do additional calculations, etc.

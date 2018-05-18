@@ -18,7 +18,7 @@ $
 [config-begin]
 
     Outputdir  = output
-    Outputfile = outputfile.root
+    Outputfile = outputfile_muon.root
     
 $ The luminosity is to be given to match the cross section values listed in the section "inputfiles"
 $ In this example, the cross sections are given in fb.
