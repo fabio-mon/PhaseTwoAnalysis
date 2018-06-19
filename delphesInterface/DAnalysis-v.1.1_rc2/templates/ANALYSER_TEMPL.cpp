@@ -48,7 +48,8 @@ void ANALYSER_TEMPL::analyze(size_t childid /* this info can be used for printou
 	d_ana::dBranchHandler<Jet>         jet(tree(),"Jet");
 	d_ana::dBranchHandler<Muon>        muontight(tree(),"MuonTight");
 	d_ana::dBranchHandler<Muon>        muonloose(tree(),"MuonLoose");
-	d_ana::dBranchHandler<Photon>      photon(tree(),"Photon");
+	d_ana::dBranchHandler<PhotonLoose> photonloose(tree(),"PhotonLoose");
+	d_ana::dBranchHandler<PhotonTight> photontight(tree(),"PhotonTight");
 	d_ana::dBranchHandler<MissingET>   met(tree(),"MissingET");
 
 
