@@ -159,7 +159,7 @@ void createMiniEventTree(TTree *t_event_, TTree *t_genParts_, TTree *t_vertices_
   t_loosePhotons_->Branch("Phi_multi",    ev.lp_phi_multi, "Phi_multi[PhotonLoose_size]/F");
   t_loosePhotons_->Branch("E_multi",      ev.lp_nrj_multi, "E_multi[PhotonLoose_size]/F");
   t_loosePhotons_->Branch("BDTScore",     ev.lp_bdt,       "BDTScore[PhotonLoose_size]/F");
-  t_loosePhotons_->Branch("IsolationVarRhoCorr",            ev.lp_iso_rhocorr,       "IsolationVarRhoCorr[PhotonTight_size]/F");
+  //t_loosePhotons_->Branch("IsolationVarRhoCorr",            ev.lp_iso_rhocorr,       "IsolationVarRhoCorr[PhotonTight_size]/F");
   t_loosePhotons_->Branch("SF",            ev.lp_sf,       "SF[PhotonLoose_size]/F");
 
   t_tightPhotons_->Branch("PhotonTight_size", &ev.ntp,     "PhotonTight_size/I");
@@ -174,7 +174,7 @@ void createMiniEventTree(TTree *t_event_, TTree *t_genParts_, TTree *t_vertices_
   t_tightPhotons_->Branch("Phi_multi",    ev.tp_phi_multi, "Phi_multi[PhotonTight_size]/F");
   t_tightPhotons_->Branch("E_multi",      ev.tp_nrj_multi, "E_multi[PhotonTight_size]/F");
   t_tightPhotons_->Branch("BDTScore",     ev.tp_bdt,       "BDTScore[PhotonTight_size]/F");
-  t_tightPhotons_->Branch("IsolationVarRhoCorr",            ev.tp_iso_rhocorr,       "IsolationVarRhoCorr[PhotonTight_size]/F");
+  //t_tightPhotons_->Branch("IsolationVarRhoCorr",            ev.tp_iso_rhocorr,       "IsolationVarRhoCorr[PhotonTight_size]/F");
   t_tightPhotons_->Branch("SF",            ev.tp_sf,       "SF[PhotonTight_size]/F");
 
 }
@@ -321,7 +321,7 @@ void attachToMiniEventTree(TTree *t_event_, TTree *t_genParts_, TTree *t_vertice
   t_loosePhotons_->SetBranchAddress("Eta_multi",    ev.lp_eta_multi);
   t_loosePhotons_->SetBranchAddress("Phi_multi",    ev.lp_phi_multi);
   t_loosePhotons_->SetBranchAddress("E_multi",      ev.lp_nrj_multi);
-  t_loosePhotons_->SetBranchAddress("IsolationVarRhoCorr",            ev.tp_iso_rhocorr);
+  //t_loosePhotons_->SetBranchAddress("IsolationVarRhoCorr",            ev.tp_iso_rhocorr);
   t_loosePhotons_->SetBranchAddress("SF",           ev.lp_sf);
 
   t_tightPhotons_->SetBranchAddress("PhotonTight_size", &ev.ntp);
@@ -335,6 +335,6 @@ void attachToMiniEventTree(TTree *t_event_, TTree *t_genParts_, TTree *t_vertice
   t_tightPhotons_->SetBranchAddress("Eta_multi",    ev.tp_eta_multi);
   t_tightPhotons_->SetBranchAddress("Phi_multi",    ev.tp_phi_multi);
   t_tightPhotons_->SetBranchAddress("E_multi",      ev.tp_nrj_multi);
-  t_tightPhotons_->SetBranchAddress("IsolationVarRhoCorr",            ev.tp_iso_rhocorr);
+  //t_tightPhotons_->SetBranchAddress("IsolationVarRhoCorr",            ev.tp_iso_rhocorr);
   t_tightPhotons_->SetBranchAddress("SF",           ev.tp_sf);
 }
