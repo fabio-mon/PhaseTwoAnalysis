@@ -19,8 +19,8 @@ Please make sure the 'Outputdir' points to a directory with sufficient space. Al
 notice that in the testConfig.txt, the test mode is enabled (running on just a few events).
 This needs to be set to false.
 
-A batch script is not included. The converter is very fast, and it is likely it can be
-run interactively. It will utilise up to 6 CPU cores. This number can be adjusted in 
-the configuration file. 
-If batch submission is desired, a individual configuration file 
-for each job needs to be generated and passed to the 'ntupler' executable.
+To submit on lxbatch an example script is given in ntupler/submit_lxbatch_job.sh     
+--> To run it:   
+  - execute voms-proxy-init -voms cms --valid 100:00
+  - then copy the certification file <cert_filename> created by default in /tmp/<cert_filename> to ntupler/proxy/    
+  - submit the job giving the certificate name as input parameter bsub -q 1nw ntupler/submit_lxbatch_job.sh <cert_filename>   
