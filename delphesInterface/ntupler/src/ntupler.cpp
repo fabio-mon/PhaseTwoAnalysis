@@ -100,9 +100,9 @@ void ntupler::analyze(size_t childid /* this info can be used for printouts */)
     if(event.size()<1)continue;
     
     //std::cout<<"rho="<<rho.Rho<<"in range "
-
+    
     h_event_weight->Fill(0.,(double)event.at(0)->Weight);
-
+    
     std::vector<GenParticle*>selectedgenpart;
     std::vector<GenParticle*>selectedgenphoton;
     //std::cout<<std::endl;
@@ -115,41 +115,45 @@ void ntupler::analyze(size_t childid /* this info can be used for printouts */)
       if( (pid>18  && pid < 23) ||  pid > 25 ) continue;
       selectedgenpart.push_back(genpart.at(i));
     }
-
+    
     std::vector<Photon*>selectedtightphotons;
     for(size_t i=0;i<photontight.size();i++)
     {
-      if(photontight.at(i)->PT<10) continue;
+      if(photontight.at(i)->PT<20) continue;
       //std::cout<<"photontight (eta,phi)=("<<photontight.at(i)->Eta<<","<<photontight.at(i)->Phi<<")\tPt="<<photontight.at(i)->PT<<"\tIsolation/E="<< photontight.at(i)->IsolationVarRhoCorr/photontight.at(i)->E <<std::endl;
-     
+      
       //if(photon.at(i)->IsolationVarRhoCorr / photon.at(i)->E > 0.25) continue;
       selectedtightphotons.push_back(photontight.at(i));
     }
-
+    
     std::vector<Photon*>selectedloosephotons;
     for(size_t i=0;i<photonloose.size();i++)
     {
-      if(photonloose.at(i)->PT<10) continue;
+      if(photonloose.at(i)->PT<20) continue;
       //std::cout<<"photonloose (eta,phi)=("<<photonloose.at(i)->Eta<<","<<photonloose.at(i)->Phi<<")\tPt="<<photonloose.at(i)->PT<<"\tIsolation/E="<< photonloose.at(i)->IsolationVarRhoCorr/photonloose.at(i)->E <<std::endl;
      
       //if(photon.at(i)->IsolationVarRhoCorr / photon.at(i)->E > 0.25) continue;
       selectedloosephotons.push_back(photonloose.at(i));
     }
-
-
-    std::vector<Electron*>selectedelectrons;
+    
+    if(doSkim && selectedtightphotons.size()<nPhmin && selectedloosephotons.size()<nPhmin)  continue;
+	
+    std::vector<Electron*> selectedelectrons;
     for(size_t i=0;i<elecs.size();i++)
     {
-      if(elecs.at(i)->PT<10)continue;
+      if(elecs.at(i)->PT<10) continue;
       selectedelectrons.push_back(elecs.at(i));
     }
 
-    std::vector<Muon*>selectedMuons;
+    std::vector<Muon*> selectedMuons;
     for(size_t i=0;i<muontight.size();i++)
     {
-      if(muontight.at(i)->PT<5)continue;
+      if(muontight.at(i)->PT<5) continue;
       selectedMuons.push_back(muontight.at(i));
     }
+
+    if( doSkim && (selectedelectrons.size()+selectedMuons.size())<nLepmin )
+      continue;
 
     std::vector<Jet*>selectedjets;
     for(size_t i=0;i<jet.size();i++)
@@ -157,6 +161,9 @@ void ntupler::analyze(size_t childid /* this info can be used for printouts */)
       if(jet.at(i)->PT<20)continue;
       selectedjets.push_back(jet.at(i));
     }
+
+    if( doSkim && selectedjets.size()<nJetmin )
+      continue;
 
     std::vector<Jet*>selectedtaujets;
     for(size_t i=0;i<taujet.size();i++)
@@ -318,7 +325,7 @@ void ntupler::analyze(size_t childid /* this info can be used for printouts */)
     //std::cout<<"alabarda spaziale"<<std::endl;
     //std::cout<<"muon"<<ev_.ntm<<"\tele"<<ev_.nte<<"\ttightph"<<ev_.ntp<<"\tloosph"<<ev_.nlp<<"\tjet"<<ev_.nj<<std::endl;
     //----------------------------------------------------------------------------------------------------------------------
-    if( (doSkim && (ev_.ntm+ev_.nte)>=nLepmin && (ev_.ntp>=nPhmin || ev_.nlp>=nPhmin) && ev_.nj>=nJetmin) || (!doSkim) )
+    //if( (doSkim && (ev_.ntm+ev_.nte)>=nLepmin && (ev_.ntp>=nPhmin || ev_.nlp>=nPhmin) && ev_.nj>=nJetmin) || (!doSkim) ) -->already done above
     {	 
       //----------------------------------------------------------------------------------------------------------------------      
       //std::cout<<"passato"<<std::endl;
