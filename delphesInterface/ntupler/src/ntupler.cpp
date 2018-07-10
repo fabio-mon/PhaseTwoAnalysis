@@ -100,7 +100,8 @@ void ntupler::analyze(size_t childid /* this info can be used for printouts */)
     if(event.size()<1)continue;
     
     //std::cout<<"rho="<<rho.Rho<<"in range "
-    
+
+    //template object d_ana::dBranchHandler<HepMCEvent> is a vector --> event is a vector of 1 entry
     h_event_weight->Fill(0.,(double)event.at(0)->Weight);
     
     std::vector<GenParticle*>selectedgenpart;
@@ -115,6 +116,15 @@ void ntupler::analyze(size_t childid /* this info can be used for printouts */)
       if( (pid>18  && pid < 23) ||  pid > 25 ) continue;
       selectedgenpart.push_back(genpart.at(i));
     }
+
+    std::vector<Jet*>selectedgenjet;
+    for(size_t i=0;i<genjet.size();i++)
+    {
+      //if( genjet.at(i)->PT<20 ) continue;
+      selectedgenjet.push_back(genjet.at(i));
+    }
+
+    
     
     std::vector<Photon*>selectedtightphotons;
     for(size_t i=0;i<photontight.size();i++)
@@ -209,6 +219,18 @@ void ntupler::analyze(size_t childid /* this info can be used for printouts */)
       ev_.gp_nrj[ev_.ngp]=selectedgenphoton.at(i)->E;
       ev_.ngp++;
     }
+
+    ev_.ngj=0;
+    for(size_t i=0;i<selectedgenjet.size();i++)
+    {
+      if(ev_.ngj>=MiniEvent_t::maxpart)break;
+      ev_.gj_pt[ev_.ngj]=selectedgenjet.at(i)->PT;
+      ev_.gj_eta[ev_.ngj]=selectedgenjet.at(i)->Eta;
+      ev_.gj_phi[ev_.ngj]=selectedgenjet.at(i)->Phi;
+      ev_.gj_mass[ev_.ngj]=selectedgenjet.at(i)->Mass;
+      ev_.ngj++;
+    }
+
 
     ev_.nlp=0;
     for(size_t i=0;i<selectedloosephotons.size();i++)
@@ -334,7 +356,7 @@ void ntupler::analyze(size_t childid /* this info can be used for printouts */)
       t_genParts_->Fill();
       t_genPhotons_->Fill();
       t_vertices_->Fill();
-      t_genJets_->Fill();
+      //t_genJets_->Fill();
       t_looseElecs_->Fill();
       t_mediumElecs_->Fill();
       t_tightElecs_->Fill();
@@ -356,7 +378,7 @@ void ntupler::analyze(size_t childid /* this info can be used for printouts */)
   t_genParts_     ->Write();
   t_genPhotons_   ->Write();
   t_vertices_     ->Write();
-  t_genJets_      ->Write();
+  //t_genJets_      ->Write();
   t_looseElecs_   ->Write();
   t_mediumElecs_  ->Write();
   t_tightElecs_   ->Write();

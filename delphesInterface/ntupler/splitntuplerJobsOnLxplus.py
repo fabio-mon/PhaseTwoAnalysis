@@ -52,8 +52,11 @@ except subprocess.CalledProcessError as e:
    print e.output
 
 ##### produce list of input files
-   os.system("rm inputfilelist.txt")
-   os.system("eos root://cmseos."+args.location+" ls "+args.input+" > inputfilelist.txt")
+   os.system("echo empty > inputfilelist.txt")
+   if(args.location=="fnal.gov"):
+      os.system("eos root://cmseos."+args.location+" ls "+args.input+" > inputfilelist.txt")
+   elif(args.location=="cern.ch"):
+      os.system("eos ls "+args.input+" > inputfilelist.txt")
 
 ##### loop for creating and sending jobs --> one file per job #####
 i=0
@@ -75,7 +78,10 @@ with open("inputfilelist.txt") as filelist:
       ##### creates ntupler config file #######
       with open(args.configFile) as fi:
          contents = fi.read()
-         replaced_contents = contents.replace("SAMPLESDIR", "root://cmseos."+args.location+"//"+args.input+"/")
+         if(args.location=="fnal.gov"):
+            replaced_contents = contents.replace("SAMPLESDIR", "root://cmseos."+args.location+"//"+args.input+"/")
+         elif(args.location=="cern.ch"):
+            replaced_contents = contents.replace("SAMPLESDIR", "/eos/cms/"+args.input+"/")
          replaced_contents = replaced_contents.replace("FILENAME", filename)
          replaced_contents = replaced_contents.replace("LABEL", args.label)
          #replaced_contents = replaced_contents.replace('OUTPUT_PATH', str(args.outputFolder+args.label+"/"))
