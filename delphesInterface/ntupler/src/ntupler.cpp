@@ -111,6 +111,7 @@ void ntupler::analyze(size_t childid /* this info can be used for printouts */)
     {
       //std::cout<<"i="<<i<<"\tPID="<<genpart.at(i)->PID<<"\tStatus="<<genpart.at(i)->Status<<"\t1stmother="<<genpart.at(i)->M1<<"\tlastmother="<<genpart.at(i)->M2<<"\t1stdaug="<<genpart.at(i)->D1<<"\tlastdaug="<<genpart.at(i)->D2<<"\tPT="<<genpart.at(i)->PT<<std::endl;
       int pid= fabs(genpart.at(i)->PID);
+      if(genpart.at(i)->PT<15 && pid!=25) continue;
       if(pid==22)
 	selectedgenphoton.push_back(genpart.at(i));	
       if( (pid>18  && pid < 23) ||  pid > 25 ) continue;

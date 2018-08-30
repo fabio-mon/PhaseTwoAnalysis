@@ -52,6 +52,7 @@ except subprocess.CalledProcessError as e:
    print e.output
 
 ##### produce list of input files
+   os.system("rm inputfilelist.txt")
    os.system("echo empty > inputfilelist.txt")
    if(args.location=="fnal.gov"):
       os.system("eos root://cmseos."+args.location+" ls "+args.input+" > inputfilelist.txt")
