@@ -26,6 +26,7 @@ void ntupler::analyze(size_t childid /* this info can be used for printouts */)
   d_ana::dBranchHandler<Photon>      photontight(tree(),"PhotonTight");
   d_ana::dBranchHandler<MissingET>   met(tree(),"PuppiMissingET");
   d_ana::dBranchHandler<Rho>         rho(tree(),"Rho");
+  d_ana::dBranchHandler<ScalarHT>    mht(tree(),"ScalarHT");
   size_t nevents=tree()->entries();
   if(isTestMode())
     nevents/=100;
@@ -58,10 +59,17 @@ void ntupler::analyze(size_t childid /* this info can be used for printouts */)
   TTree * t_puppiMET_     = new TTree("PuppiMissingET","PuppiMissingET");
   TTree * t_loosePhotons_ = new TTree("PhotonLoose","PhotonLoose");
   TTree * t_tightPhotons_ = new TTree("PhotonTight","PhotonTight");
+  TTree * t_scalarHT_     = new TTree("ScalarHT","ScalarHT");
   createMiniEventTree(t_event_, t_genParts_, t_vertices_, t_genJets_, t_genPhotons_, t_looseElecs_,
 			t_mediumElecs_,t_tightElecs_, t_looseMuons_, t_tightMuons_, t_allTaus_, t_puppiJets_, t_puppiMET_, t_loosePhotons_,
-			t_tightPhotons_, ev_);
+		      t_tightPhotons_, ev_);
 
+  Int_t nmht;
+  Float_t ht[MiniEvent_t::maxpart];
+  t_scalarHT_->Branch("MHT_size",       &nmht,    "MHT_size/I");
+  t_scalarHT_->Branch("MHT",            ht,      "MHT[ScalarHT_size]/F");
+
+  
   //load effective corrections for delphes samples vs fullSim
   scaleFactors
     tightelecsf,medelecsf,looseelecsf,
@@ -344,6 +352,15 @@ void ntupler::analyze(size_t childid /* this info can be used for printouts */)
       ev_.nmet++;
     }
 
+    nmht=0;
+    for(size_t i=0;i<mht.size();i++)
+    {
+      if(nmht>=MiniEvent_t::maxpart) break;
+      ht[nmht]=mht.at(i)->HT ;
+      nmht++;
+    }
+
+
     //----------------------------------------------------------------------------------------------------------------------
     //std::cout<<"alabarda spaziale"<<std::endl;
     //std::cout<<"muon"<<ev_.ntm<<"\tele"<<ev_.nte<<"\ttightph"<<ev_.ntp<<"\tloosph"<<ev_.nlp<<"\tjet"<<ev_.nj<<std::endl;
@@ -366,6 +383,7 @@ void ntupler::analyze(size_t childid /* this info can be used for printouts */)
       t_allTaus_->Fill();
       t_puppiJets_->Fill();
       t_puppiMET_->Fill();
+      t_scalarHT_->Fill();
       t_loosePhotons_->Fill();
       t_tightPhotons_->Fill();
     }
@@ -388,6 +406,7 @@ void ntupler::analyze(size_t childid /* this info can be used for printouts */)
   t_allTaus_      ->Write();
   t_puppiJets_    ->Write();
   t_puppiMET_     ->Write();
+  t_scalarHT_     ->Write();
   t_loosePhotons_ ->Write();
   t_tightPhotons_ ->Write();
   
