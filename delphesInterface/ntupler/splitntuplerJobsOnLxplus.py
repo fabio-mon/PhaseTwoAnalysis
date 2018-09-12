@@ -10,9 +10,9 @@ parser = argparse.ArgumentParser(description='This script splits ntupler tasks i
 
 parser.add_argument("-l", "--label",          required=True,     type=str,  help="job label")
 parser.add_argument("-e", "--exe",            required=True,     type=str,  help="executable")
-parser.add_argument("-i", "--input",          required=True,     type=str,  help="input folder or file (ex: /store/...)")
+parser.add_argument("-i", "--input",          required=True,     type=str,  help="input folder or file (eg: /store/...)")
 parser.add_argument("-p", "--proxy",          required=True,     type=str,  help="proxy filename to access grid ")
-parser.add_argument("-loc", "--location",          required=True,     type=str,  help="eos location of files ( fnal.gov , cern.ch )")
+parser.add_argument("-loc", "--location",          required=True,     type=str,  help="eos location of files ( fnal.gov , cern.ch , desy.de)")
 parser.add_argument("-o", "--outputFolder",   required=True,     type=str,  help="folder where to store output files")
 #parser.add_argument("-f", "--outputFileName", required=True,     type=str,  help="base name of output files [outputFileName]_i.root")
 parser.add_argument("-c", "--configFile",     required=True,     type=str,  help="config file to be run")
@@ -58,6 +58,8 @@ except subprocess.CalledProcessError as e:
       os.system("eos root://cmseos."+args.location+" ls "+args.input+" > inputfilelist.txt")
    elif(args.location=="cern.ch"):
       os.system("eos ls "+args.input+" > inputfilelist.txt")
+   elif(args.location=="desy.de"):
+      os.system("gfal-ls srm://dcache-se-cms.desy.de/pnfs/desy.de/cms/tier2"+args.input+" > inputfilelist.txt")
 
 ##### loop for creating and sending jobs --> one file per job #####
 i=0
@@ -83,6 +85,8 @@ with open("inputfilelist.txt") as filelist:
             replaced_contents = contents.replace("SAMPLESDIR", "root://cmseos."+args.location+"//"+args.input+"/")
          elif(args.location=="cern.ch"):
             replaced_contents = contents.replace("SAMPLESDIR", "/eos/cms/"+args.input+"/")
+         elif(args.location=="desy.de"):
+            replaced_contents = contents.replace("SAMPLESDIR", "root://cms-xrd-global.cern.ch/"+args.input+"/")
          replaced_contents = replaced_contents.replace("FILENAME", filename)
          replaced_contents = replaced_contents.replace("LABEL", args.label)
          #replaced_contents = replaced_contents.replace('OUTPUT_PATH', str(args.outputFolder+args.label+"/"))
